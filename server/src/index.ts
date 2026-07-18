@@ -1,8 +1,9 @@
+import { PORT } from "./config/env.js"
 import { httpServer } from "./server.js"
 
-const PORT = 3001
+const port = PORT || 5000
 
 // listen httpServer
-httpServer.listen(PORT, () => {
-    console.log(`server is listening on port :: ${PORT}`)
+httpServer.listen(port, () => {
+    console.log(`server is listening on port :: ${port}`)
 })
