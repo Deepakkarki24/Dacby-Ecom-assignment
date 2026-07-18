@@ -5,19 +5,21 @@ import { connectDatabase, connectMongoDBAtlas } from './config/database.js';
 import cors from 'cors'
 import bodyParser from "body-parser";
 
+// database connection
 if (NODE_ENV != "production") {
     connectDatabase(MONGODB_URI || '');
 } else {
     connectMongoDBAtlas();
 }
 
+// route files import
+import orderRoutes from './routes/orderRoutes.js'
+
 const app = express()
 const httpServer = createServer(app)
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
-
-import orderRoutes from './routes/orderRoutes.js'
+app.use(express.json({ limit: '100kb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100kb' }));
 
 app.use(cors({
     origin: '*',
@@ -25,6 +27,9 @@ app.use(cors({
     credentials: true
 }));
 
+
+// router will be use here with middleware
 app.use("/api/order", orderRoutes)
+
 
 export { httpServer }
