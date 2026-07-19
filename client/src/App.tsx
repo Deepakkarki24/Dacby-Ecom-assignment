@@ -1,11 +1,7 @@
-import React from 'react'
+import { OrdersDashboard } from "./components/dashboard/OrdersDashboard";
 
-const App = () => {
-  return (
-    <div className='text-2xl text-green-400 font-semibold'>
-      E-comm project
-    </div>
-  )
+function App() {
+  return <OrdersDashboard />;
 }
 
-export default App
+export default App;
