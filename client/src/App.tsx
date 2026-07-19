@@ -1,6 +1,7 @@
-import { OrdersDashboard } from "./components/dashboard/OrdersDashboard";
+import type React from "react";
+import OrdersDashboard from "./components/dashboard/OrdersDashboard";
 
-function App() {
+const App: React.FC = () => {
   return <OrdersDashboard />;
 }
 

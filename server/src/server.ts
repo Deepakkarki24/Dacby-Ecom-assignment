@@ -25,8 +25,8 @@ app.use(express.json({ limit: '100kb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '100kb' }));
 
 app.use(cors({
-    origin: '*',
-    // origin: ['http://localhost:5173'],
+    // origin: '*',
+    origin: ['http://localhost:5173'],
     credentials: true
 }));
 

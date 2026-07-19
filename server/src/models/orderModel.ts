@@ -23,6 +23,7 @@ export interface OrderDocument extends Document {
   phoneNumber: string;
   productName: string;
   amount: number;
+  price: number;
   paymentStatus: PaymentStatus;
   orderStatus: OrderStatus;
   orderStatusHistory: OrderStatusHistory[];
@@ -80,6 +81,12 @@ const orderSchema = new Schema<OrderDocument>(
     },
 
     amount: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    price: {
       type: Number,
       required: true,
       min: 0,

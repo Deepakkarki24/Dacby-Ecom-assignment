@@ -22,6 +22,7 @@ export interface Order {
   phoneNumber: string;
   productName: string;
   amount: number;
+  price: number;
   paymentStatus: PaymentStatus;
   orderStatus: OrderStatus;
   orderStatusHistory: OrderStatusHistory[];

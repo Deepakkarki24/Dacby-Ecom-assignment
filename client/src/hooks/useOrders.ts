@@ -1,7 +1,6 @@
+import { ApiError, fetchOrders } from "@/apiManager";
+import type { Order, OrderStatus } from "@/types/order";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchOrders } from "../api/orders";
-import { ApiError } from "../api/client";
-import type { Order, OrderStatus } from "../types/order";
 
 interface UseOrdersOptions {
   statusFilter: OrderStatus | "";
@@ -15,9 +14,9 @@ interface UseOrdersResult {
   lastUpdated: Date | null;
 }
 
-export function useOrders({
+export const useOrders = ({
   statusFilter,
-}: UseOrdersOptions): UseOrdersResult {
+}: UseOrdersOptions): UseOrdersResult => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,8 +29,9 @@ export function useOrders({
 
     try {
       const data = await fetchOrders(statusFilter);
+
       if (isMounted.current) {
-        setOrders(data);
+        setOrders(data ?? []);
         setLastUpdated(new Date());
       }
     } catch (err) {

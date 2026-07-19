@@ -1,15 +1,13 @@
-import type { Order } from "../../types/order";
-import {
-  StatusBadge,
-  formatCurrency,
-  formatDateTime,
-} from "./StatusBadge";
+import type { Order } from "@/types/order";
+import StatusBadge from "@/components/orders/StatusBadge";
+import type React from "react";
+import { formatCurrency, formatDateTime } from "@/utils/utils";
 
 interface OrdersTableProps {
   orders: Order[];
 }
 
-export function OrdersTable({ orders }: OrdersTableProps) {
+const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
   return (
     <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/2">
       <table className="min-w-full divide-y divide-white/10 text-left text-sm">
@@ -33,13 +31,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               className="transition-colors hover:bg-white/3"
             >
               <td className="px-4 py-3 font-mono text-xs text-emerald-300">
-                {order.orderId}
+                {order.orderId.slice(0, 12)}
               </td>
               <td className="px-4 py-3 text-gray-100">{order.customerName}</td>
               <td className="px-4 py-3 text-gray-400">{order.phoneNumber}</td>
               <td className="px-4 py-3 text-gray-100">{order.productName}</td>
               <td className="px-4 py-3 font-medium text-gray-100">
-                {formatCurrency(order.amount)}
+                {formatCurrency(order.price)}
               </td>
               <td className="px-4 py-3 font-medium text-gray-100">
                 {order.amount}
@@ -50,7 +48,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               <td className="px-4 py-3">
                 <StatusBadge status={order.paymentStatus} variant="payment" />
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-gray-400">
+              <td className="px-4 py-3 text-xs whitespace-nowrap text-gray-400">
                 {formatDateTime(order.createdAt)}
               </td>
             </tr>
@@ -60,3 +58,5 @@ export function OrdersTable({ orders }: OrdersTableProps) {
     </div>
   );
 }
+
+export default OrdersTable;

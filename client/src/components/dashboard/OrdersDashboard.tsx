@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import { runScheduler } from "../../api/scheduler";
-import { ApiError } from "../../api/client";
-import { useOrders } from "../../hooks/useOrders";
+import { ApiError, runScheduler } from "@/apiManager";
+import { useOrders } from "@/hooks/useOrders";
+import { formatDateTime } from "@/utils/utils";
 import {
   ORDER_STATUS_OPTIONS,
   type OrderStatus,
-} from "../../types/order";
-import { OrdersTable } from "../orders/OrdersTable";
-import { CreateOrderModal } from "../orders/CreateOrderModal";
+} from "@/types/order";
+import OrdersTable from "@/components/orders/OrdersTable";
+import CreateOrderModal from "@/components/orders/CreateOrderModal";
 import {
   EmptyState,
   ErrorState,
   LoadingState,
-} from "../orders/OrderStates";
+} from "@/components/orders/OrderStates";
 import { XIcon } from "@phosphor-icons/react";
 
 
-export const OrdersDashboard: React.FC = () => {
+const OrdersDashboard: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "">("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createMessage, setCreateMessage] = useState<string | null>(null);
@@ -27,7 +27,6 @@ export const OrdersDashboard: React.FC = () => {
   const { orders, loading, error, refresh, lastUpdated } = useOrders({
     statusFilter
   });
-  console.log(orders)
   const selectedStatusLabel =
     ORDER_STATUS_OPTIONS.find((option) => option.value === statusFilter)
       ?.label ?? "All Statuses";
@@ -133,11 +132,7 @@ export const OrdersDashboard: React.FC = () => {
 
       {lastUpdated && (
         <p className="pb-2 text-left text-xs text-gray-500">
-          Last updated:{" "}
-          {new Intl.DateTimeFormat("en-IN", {
-            dateStyle: "medium",
-            timeStyle: "medium",
-          }).format(lastUpdated)}
+          Last updated: {formatDateTime(lastUpdated)}
         </p>
       )}
 
@@ -148,10 +143,16 @@ export const OrdersDashboard: React.FC = () => {
       )}
 
       {schedulerMessage && (
-        <div className="relative mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-left text-sm text-emerald-200">
+        <div className="relative mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 pr-10 text-left text-sm text-emerald-200">
           {schedulerMessage}
-
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white"><XIcon size={12} /></span>
+          <button
+            type="button"
+            onClick={() => setSchedulerMessage(null)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-emerald-200/80 transition hover:bg-emerald-500/20 hover:text-emerald-100"
+            aria-label="Dismiss message"
+          >
+            <XIcon size={14} />
+          </button>
         </div>
       )}
 
@@ -177,3 +178,5 @@ export const OrdersDashboard: React.FC = () => {
     </div>
   );
 }
+
+export default OrdersDashboard;

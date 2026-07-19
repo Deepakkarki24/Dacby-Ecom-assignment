@@ -1,4 +1,6 @@
-import type { OrderStatus, PaymentStatus } from "../../types/order";
+import type { OrderStatus, PaymentStatus } from "@/types/order";
+import { formatLabel } from "@/utils/utils";
+import type React from "react";
 
 const orderStatusStyles: Record<OrderStatus, string> = {
   PLACED: "bg-amber-500/15 text-amber-300 ring-amber-500/30",
@@ -11,19 +13,12 @@ const paymentStatusStyles: Record<PaymentStatus, string> = {
   PENDING: "bg-orange-500/15 text-orange-300 ring-orange-500/30",
 };
 
-function formatLabel(value: string): string {
-  return value
-    .split("_")
-    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
-    .join(" ");
-}
-
 interface StatusBadgeProps {
   status: OrderStatus | PaymentStatus;
   variant: "order" | "payment";
 }
 
-export function StatusBadge({ status, variant }: StatusBadgeProps) {
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status, variant }) => {
   const styles =
     variant === "order"
       ? orderStatusStyles[status as OrderStatus]
@@ -38,17 +33,4 @@ export function StatusBadge({ status, variant }: StatusBadgeProps) {
   );
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-export function formatDateTime(value: string): string {
-  return new Intl.DateTimeFormat("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
-}
+export default StatusBadge;

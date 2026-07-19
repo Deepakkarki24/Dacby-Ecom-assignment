@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { createOrder, type CreateOrderPayload } from "../../api/orders";
-import { ApiError } from "../../api/client";
+import React, { useEffect, useState, type FormEvent } from "react";
+import { ApiError, createOrder, type CreateOrderPayload } from "@/apiManager";
+import { formatCurrency } from "@/utils/utils";
 
 interface CreateOrderModalProps {
   isOpen: boolean;
@@ -12,15 +12,15 @@ const initialForm: CreateOrderPayload = {
   customerName: "",
   phoneNumber: "",
   productName: "",
-  amount: "",
+  quantity: "",
   price: "",
 };
 
-export function CreateOrderModal({
+const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-}: CreateOrderModalProps) {
+}) => {
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,10 +51,10 @@ export function CreateOrderModal({
 
   if (!isOpen) return null;
 
-  const quantity = Number(form.amount);
+  const quantity = Number(form.quantity);
   const unitPrice = Number(form.price);
   const total =
-    form.amount !== "" &&
+    form.quantity !== "" &&
     form.price !== "" &&
     !Number.isNaN(quantity) &&
     !Number.isNaN(unitPrice)
@@ -75,7 +75,7 @@ export function CreateOrderModal({
       !form.customerName.trim() ||
       !form.phoneNumber.trim() ||
       !form.productName.trim() ||
-      form.amount === "" ||
+      form.quantity === "" ||
       form.price === ""
     ) {
       setError("All fields are required.");
@@ -89,7 +89,7 @@ export function CreateOrderModal({
       quantity <= 0 ||
       unitPrice <= 0
     ) {
-      setError("Amount and price must be valid positive numbers.");
+      setError("Quantity and price must be valid positive numbers.");
       setSubmitting(false);
       return;
     }
@@ -99,7 +99,7 @@ export function CreateOrderModal({
         customerName: form.customerName.trim(),
         phoneNumber: form.phoneNumber.trim(),
         productName: form.productName.trim(),
-        amount: String(quantity),
+        quantity: String(quantity),
         price: String(unitPrice),
       });
       onSuccess();
@@ -207,16 +207,16 @@ export function CreateOrderModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="amount" className="text-sm text-gray-300">
-                Amount
+              <label htmlFor="quantity" className="text-sm text-gray-300">
+                Quantity
               </label>
               <input
-                id="amount"
+                id="quantity"
                 type="number"
                 min="1"
                 step="1"
-                value={form.amount}
-                onChange={(event) => updateField("amount", event.target.value)}
+                value={form.quantity}
+                onChange={(event) => updateField("quantity", event.target.value)}
                 className="rounded-lg border border-white/10 bg-[#121318] px-3 py-2.5 text-sm text-gray-100 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
                 placeholder="1"
                 disabled={submitting}
@@ -245,11 +245,7 @@ export function CreateOrderModal({
             <p className="text-sm text-gray-400">
               Order total:{" "}
               <span className="font-medium text-emerald-300">
-                {new Intl.NumberFormat("en-IN", {
-                  style: "currency",
-                  currency: "INR",
-                  maximumFractionDigits: 2,
-                }).format(total)}
+                {formatCurrency(total)}
               </span>
             </p>
           )}
@@ -282,3 +278,5 @@ export function CreateOrderModal({
     </div>
   );
 }
+
+export default CreateOrderModal;
