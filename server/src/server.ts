@@ -14,6 +14,9 @@ if (NODE_ENV != "production") {
 
 // route files import
 import orderRoutes from './routes/orderRoutes.js'
+import schedulerRoutes from './routes/schedulerRoutes.js'
+
+import { cronJob_updateOrderStatus } from './cron/orderScheduler.js';
 
 const app = express()
 const httpServer = createServer(app)
@@ -30,6 +33,11 @@ app.use(cors({
 
 // router will be use here with middleware
 app.use("/api/order", orderRoutes)
+app.use("/api/scheduler", schedulerRoutes)
 
+/**
+ * cron job schedular
+ */
+// cronJob_updateOrderStatus()
 
 export { httpServer }
