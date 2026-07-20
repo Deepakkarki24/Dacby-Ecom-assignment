@@ -6,23 +6,22 @@ export interface CreateOrderPayload {
   customerName: string;
   phoneNumber: string;
   productName: string;
-  quantity: string;
   price: string;
 }
 
-export function fetchOrders(status?: OrderStatus | ""): Promise<Order[]> {
+export const fetchOrders = (status?: OrderStatus | "") => {
   const params = status ? { status } : undefined;
-  return MakeRequest.get<Order[]>(END_POINTS.ORDER.FETCH, params);
+  const url = END_POINTS.ORDER.FETCH
+  return MakeRequest.get<Order[]>(url, params);
 }
 
-export function createOrder(payload: CreateOrderPayload): Promise<Order> {
-  const quantity = Number(payload.quantity);
-  const unitPrice = Number(payload.price);
+export const createOrder = (payload: CreateOrderPayload) => {
+  const url = END_POINTS.ORDER.CREATE
 
-  return MakeRequest.post<Order>(END_POINTS.ORDER.CREATE, {
+  return MakeRequest.post<Order>(url, {
     customerName: payload.customerName,
     phoneNumber: payload.phoneNumber,
     productName: payload.productName,
-    amount: quantity * unitPrice,
+    price: payload.price,
   });
 }

@@ -1,4 +1,5 @@
-import { ApiError, fetchOrders } from "@/apiManager";
+import { ApiError } from "@/apiManager/apiError";
+import { fetchOrders } from "@/apiManager/orders";
 import type { Order, OrderStatus } from "@/types/order";
 import { useCallback, useEffect, useRef, useState } from "react";
 

@@ -18,7 +18,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
             <th className="px-4 py-3 font-medium text-gray-300">Phone</th>
             <th className="px-4 py-3 font-medium text-gray-300">Product</th>
             <th className="px-4 py-3 font-medium text-gray-300">Price</th>
-            <th className="px-4 py-3 font-medium text-gray-300">Amount</th>
             <th className="px-4 py-3 font-medium text-gray-300">Status</th>
             <th className="px-4 py-3 font-medium text-gray-300">Payment</th>
             <th className="px-4 py-3 font-medium text-gray-300">Created</th>
@@ -38,9 +37,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
               <td className="px-4 py-3 text-gray-100">{order.productName}</td>
               <td className="px-4 py-3 font-medium text-gray-100">
                 {formatCurrency(order.price)}
-              </td>
-              <td className="px-4 py-3 font-medium text-gray-100">
-                {order.amount}
               </td>
               <td className="px-4 py-3">
                 <StatusBadge status={order.orderStatus} variant="order" />

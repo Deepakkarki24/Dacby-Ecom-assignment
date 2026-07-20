@@ -7,9 +7,9 @@ import { Order } from "../models/orderModel.js";
 export const createOrder = async (req: Request, res: Response) => {
     try {
 
-        const { customerName, phoneNumber, productName, amount } = req.body
+        const { customerName, phoneNumber, productName, price } = req.body
 
-        if (!customerName || !phoneNumber || !productName) {
+        if (!customerName || !phoneNumber || !productName || !price) {
             return errorResponse(
                 res,
                 401,
@@ -27,7 +27,7 @@ export const createOrder = async (req: Request, res: Response) => {
             customerName,
             phoneNumber,
             productName,
-            amount,
+            price
         })
 
         if (!createdOrder) {

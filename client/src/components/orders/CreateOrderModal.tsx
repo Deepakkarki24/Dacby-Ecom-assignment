@@ -1,6 +1,6 @@
+import { ApiError } from "@/apiManager/apiError";
+import { createOrder, type CreateOrderPayload } from "@/apiManager/orders";
 import React, { useEffect, useState, type FormEvent } from "react";
-import { ApiError, createOrder, type CreateOrderPayload } from "@/apiManager";
-import { formatCurrency } from "@/utils/utils";
 
 interface CreateOrderModalProps {
   isOpen: boolean;
@@ -12,7 +12,6 @@ const initialForm: CreateOrderPayload = {
   customerName: "",
   phoneNumber: "",
   productName: "",
-  quantity: "",
   price: "",
 };
 
@@ -51,16 +50,6 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
 
   if (!isOpen) return null;
 
-  const quantity = Number(form.quantity);
-  const unitPrice = Number(form.price);
-  const total =
-    form.quantity !== "" &&
-    form.price !== "" &&
-    !Number.isNaN(quantity) &&
-    !Number.isNaN(unitPrice)
-      ? quantity * unitPrice
-      : null;
-
   const updateField = (field: keyof CreateOrderPayload, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
     setError(null);
@@ -75,7 +64,6 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
       !form.customerName.trim() ||
       !form.phoneNumber.trim() ||
       !form.productName.trim() ||
-      form.quantity === "" ||
       form.price === ""
     ) {
       setError("All fields are required.");
@@ -83,24 +71,13 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
       return;
     }
 
-    if (
-      Number.isNaN(quantity) ||
-      Number.isNaN(unitPrice) ||
-      quantity <= 0 ||
-      unitPrice <= 0
-    ) {
-      setError("Quantity and price must be valid positive numbers.");
-      setSubmitting(false);
-      return;
-    }
 
     try {
       await createOrder({
         customerName: form.customerName.trim(),
         phoneNumber: form.phoneNumber.trim(),
         productName: form.productName.trim(),
-        quantity: String(quantity),
-        price: String(unitPrice),
+        price: String(form.price)
       });
       onSuccess();
       onClose();
@@ -205,50 +182,22 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="quantity" className="text-sm text-gray-300">
-                Quantity
-              </label>
-              <input
-                id="quantity"
-                type="number"
-                min="1"
-                step="1"
-                value={form.quantity}
-                onChange={(event) => updateField("quantity", event.target.value)}
-                className="rounded-lg border border-white/10 bg-[#121318] px-3 py-2.5 text-sm text-gray-100 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
-                placeholder="1"
-                disabled={submitting}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="price" className="text-sm text-gray-300">
-                Price
-              </label>
-              <input
-                id="price"
-                type="number"
-                min="0"
-                step="0.01"
-                value={form.price}
-                onChange={(event) => updateField("price", event.target.value)}
-                className="rounded-lg border border-white/10 bg-[#121318] px-3 py-2.5 text-sm text-gray-100 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
-                placeholder="2999"
-                disabled={submitting}
-              />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="price" className="text-sm text-gray-300">
+              Price
+            </label>
+            <input
+              id="price"
+              type="number"
+              min="0"
+              step="0.01"
+              value={form.price}
+              onChange={(event) => updateField("price", event.target.value)}
+              className="rounded-lg border border-white/10 bg-[#121318] px-3 py-2.5 text-sm text-gray-100 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20"
+              placeholder="2999"
+              disabled={submitting}
+            />
           </div>
-
-          {total !== null && (
-            <p className="text-sm text-gray-400">
-              Order total:{" "}
-              <span className="font-medium text-emerald-300">
-                {formatCurrency(total)}
-              </span>
-            </p>
-          )}
 
           {error && (
             <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
